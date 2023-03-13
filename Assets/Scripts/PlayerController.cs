@@ -15,10 +15,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float rotationSpeedModifier;
 
+    GameObject interactibleObject;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -33,13 +35,28 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.right * hInput * movementSpeedMultiplier * Time.deltaTime);
 
         transform.Rotate(Vector3.up * mouseX * rotationSpeedModifier * Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(interactibleObject.GetComponent<Collider>().bounds))
+            {
+                if (interactibleObject.tag == "Door")
+                {
+                    interactibleObject.SendMessage("OpenOrClose");
+                }
+            }
+
+
+        }
+
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Door")
         {
-            other.gameObject.SendMessage("OpenOrClose");
+            interactibleObject = other.gameObject;
         }
     }
 }
