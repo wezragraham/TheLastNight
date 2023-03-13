@@ -34,4 +34,12 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up * mouseX * rotationSpeedModifier * Time.deltaTime);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Door")
+        {
+            other.gameObject.SendMessage("OpenOrClose");
+        }
+    }
 }
