@@ -17,10 +17,12 @@ public class PlayerController : MonoBehaviour
 
     GameObject interactibleObject;
 
+    GameObject itemSlot;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        itemSlot = this.transform.GetChild(2).gameObject;
     }
 
     // Update is called once per frame
@@ -44,6 +46,12 @@ public class PlayerController : MonoBehaviour
                 {
                     interactibleObject.SendMessage("OpenOrClose");
                 }
+
+                if (interactibleObject.tag == "Weapon")
+                {
+                    interactibleObject.transform.position = itemSlot.transform.position;
+                    interactibleObject.transform.parent = itemSlot.transform;
+                }
             }
 
 
@@ -54,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Door")
+        if (other.gameObject.tag == "Door" || other.gameObject.tag == "Weapon")
         {
             interactibleObject = other.gameObject;
         }
