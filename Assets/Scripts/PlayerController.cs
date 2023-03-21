@@ -81,15 +81,15 @@ public class PlayerController : MonoBehaviour
             if (!isCrouching)
             {
                 isCrouching = true;
-                myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y - 0.1f, myCamera.transform.position.z);
-                itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y - 0.1f, itemSlot.transform.position.z);
+                myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y - 0.3f, myCamera.transform.position.z);
+                itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y - 0.3f, itemSlot.transform.position.z);
                 movementSpeedMultiplier = movementSpeedMultiplier / 2;
             }
             else if (isCrouching)
             {
                 isCrouching = false;
-                myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y + 0.1f, myCamera.transform.position.z);
-                itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y + 0.1f, itemSlot.transform.position.z);
+                myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y + 0.3f, myCamera.transform.position.z);
+                itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y + 0.3f, itemSlot.transform.position.z);
                 movementSpeedMultiplier = movementSpeedMultiplier * 2;
             }
         }
