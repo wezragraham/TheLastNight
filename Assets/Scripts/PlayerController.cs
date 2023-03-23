@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private float hInput;
     private float mouseX;
 
+    Footsteps myFootsteps;
+    float stepTimer;
 
     [SerializeField]
     private float movementSpeedMultiplier;
@@ -23,13 +25,16 @@ public class PlayerController : MonoBehaviour
 
     GameObject myCamera;
 
-    bool isCrouching;
+    public bool isCrouching;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         itemSlot = this.transform.GetChild(2).gameObject;
         myCamera = this.transform.GetChild(1).gameObject;
+        myFootsteps = this.gameObject.GetComponent<Footsteps>();
     }
 
     // Update is called once per frame
@@ -46,16 +51,17 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX * rotationSpeedModifier * Time.deltaTime);
 
         //object interaction stuff - might move to another script
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && interactibleObject != null)
         {
-            //door opening, closing
+            
             if (this.gameObject.GetComponent<Collider>().bounds.Intersects(interactibleObject.GetComponent<Collider>().bounds))
             {
+                //door opening, closing
                 if (interactibleObject.tag == "Door")
                 {
                     interactibleObject.SendMessage("OpenOrClose");
                 }
-
+                //picking up items
                 if (interactibleObject.tag == "Weapon" || interactibleObject.tag == "Tool")
                 {
                     if (equippedObject != null)
@@ -91,6 +97,17 @@ public class PlayerController : MonoBehaviour
                 myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y + 0.3f, myCamera.transform.position.z);
                 itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y + 0.3f, itemSlot.transform.position.z);
                 movementSpeedMultiplier = movementSpeedMultiplier * 2;
+            }
+        }
+
+        //footsteps for enemy tracking
+        if (!isCrouching)
+        {
+            stepTimer += Time.deltaTime;
+            if (stepTimer >= 5)
+            {
+                myFootsteps.TakeStep();
+                stepTimer = 0;
             }
         }
 
