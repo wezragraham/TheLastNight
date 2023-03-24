@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillerMovement : MonoBehaviour
+public class KillerController : MonoBehaviour
 {
     [SerializeField]
     GameObject player;
@@ -15,8 +15,14 @@ public class KillerMovement : MonoBehaviour
     [SerializeField]
     float rotationSpeedMultiplier;
 
+    float attackTimer;
+
     Animator myAnimator;
     AudioSource mySound;
+
+    [SerializeField]
+    int damage;
+
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +35,35 @@ public class KillerMovement : MonoBehaviour
     void Update()
     {
         playerStepLocation = player.GetComponent<Footsteps>().stepLocation;
+        ChasePlayer();
 
+
+
+        if (myAnimator.GetBool("IsWalking") == true && mySound.isPlaying == false)
+        {
+            mySound.Play();
+        }
+        else if (myAnimator.GetBool("IsWalking") == false && mySound.isPlaying == true)
+        {
+            mySound.Stop();
+        }
+
+
+        //while player is in range, attack every second
+        if (this.gameObject.GetComponent<Collider>().bounds.Intersects(player.GetComponent<Collider>().bounds))
+        {
+            attackTimer += Time.deltaTime;
+            if (attackTimer > 1)
+            {
+                Attack(player);
+            }
+        }
+
+    }
+
+    //locate and follow player
+    void ChasePlayer()
+    {
         if ((Vector3.Distance(player.transform.position, this.transform.position) < 3))
         {
             myAnimator.SetBool("IsWalking", true);
@@ -50,14 +84,13 @@ public class KillerMovement : MonoBehaviour
             }
 
         }
+    }
 
-        if (myAnimator.GetBool("IsWalking") == true && mySound.isPlaying == false)
-        {
-            mySound.Play();
-        }
-        else if (myAnimator.GetBool("IsWalking") == false && mySound.isPlaying == true)
-        {
-            mySound.Stop();
-        }
+    void Attack(GameObject target)
+    {
+        myAnimator.SetTrigger("Attack");
+        target.GetComponent<Health>().TakeDamage(damage);
+        attackTimer = 0;
+        
     }
 }

@@ -56,6 +56,11 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up * mouseX * rotationSpeedModifier * Time.deltaTime);
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         //object interaction stuff - might move to another script
         if (Input.GetKeyDown(KeyCode.Mouse0) && interactibleObject != null)
         {
@@ -99,16 +104,11 @@ public class PlayerController : MonoBehaviour
         //attacking
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(interactibleObject.GetComponent<Collider>().bounds))
+            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(killer.GetComponent<Collider>().bounds))
             {
-                if (equippedObject.tag == "Weapon")
+                if (equippedObject != null && equippedObject.tag == "Weapon")
                 {
                     equippedObject.GetComponent<Weapon>().Attack(killer);
-                    Debug.Log(killer.GetComponent<Health>().healthPoints);
-                }
-                else
-                {
-                    Attack(killer);
                 }
             }
 
