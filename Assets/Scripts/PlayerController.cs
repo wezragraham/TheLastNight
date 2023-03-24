@@ -17,7 +17,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float rotationSpeedModifier;
 
+    [SerializeField]
+    int damage;
+
     GameObject interactibleObject;
+
+    GameObject killer;
 
     GameObject equippedObject;
 
@@ -35,6 +40,7 @@ public class PlayerController : MonoBehaviour
         itemSlot = this.transform.GetChild(2).gameObject;
         myCamera = this.transform.GetChild(1).gameObject;
         myFootsteps = this.gameObject.GetComponent<Footsteps>();
+        killer = GameObject.FindGameObjectWithTag("Killer");
     }
 
     // Update is called once per frame
@@ -64,17 +70,7 @@ public class PlayerController : MonoBehaviour
                 //picking up items
                 if (interactibleObject.tag == "Weapon" || interactibleObject.tag == "Tool")
                 {
-                    if (equippedObject != null)
-                    {
-                        equippedObject.transform.parent = null;
-                        equippedObject.transform.position = interactibleObject.transform.position;
-                        equippedObject.transform.rotation = interactibleObject.transform.rotation;
-                    }
-
-                    interactibleObject.transform.position = itemSlot.transform.position;
-                    interactibleObject.transform.rotation = itemSlot.transform.rotation;
-                    interactibleObject.transform.parent = itemSlot.transform;
-                    equippedObject = interactibleObject;
+                    PickUpItem();
 
                 }
             }
@@ -100,6 +96,24 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //attacking
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(interactibleObject.GetComponent<Collider>().bounds))
+            {
+                if (equippedObject.tag == "Weapon")
+                {
+                    equippedObject.GetComponent<Weapon>().Attack(killer);
+                    Debug.Log(killer.GetComponent<Health>().healthPoints);
+                }
+                else
+                {
+                    Attack(killer);
+                }
+            }
+
+        }
+
         //footsteps for enemy tracking
         if (!isCrouching)
         {
@@ -114,6 +128,21 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    void PickUpItem()
+    {
+        if (equippedObject != null)
+        {
+            equippedObject.transform.parent = null;
+            equippedObject.transform.position = interactibleObject.transform.position;
+            equippedObject.transform.rotation = interactibleObject.transform.rotation;
+        }
+
+        interactibleObject.transform.position = itemSlot.transform.position;
+        interactibleObject.transform.rotation = itemSlot.transform.rotation;
+        interactibleObject.transform.parent = itemSlot.transform;
+        equippedObject = interactibleObject;
+    }
+
     //object stuff
     private void OnTriggerEnter(Collider other)
     {
@@ -121,5 +150,10 @@ public class PlayerController : MonoBehaviour
         {
             interactibleObject = other.gameObject;
         }
+    }
+
+    void Attack(GameObject target)
+    {
+        target.GetComponent<Health>().TakeDamage(damage);
     }
 }

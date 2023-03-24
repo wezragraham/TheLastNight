@@ -2942,6 +2942,8 @@ GameObject:
   m_Component:
   - component: {fileID: 694504928}
   - component: {fileID: 694504927}
+  - component: {fileID: 694504929}
+  - component: {fileID: 694504930}
   m_Layer: 0
   m_Name: KnifeContainer
   m_TagString: Weapon
@@ -2978,6 +2980,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &694504929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694504926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dad7d1416552cc4795b5231f540fe1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 15
+--- !u!95 &694504930
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694504926}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d53742c705ef2234b88f85c6a399f264, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &700165904
 GameObject:
   m_ObjectHideFlags: 0
@@ -3622,6 +3657,7 @@ GameObject:
   - component: {fileID: 821876892}
   - component: {fileID: 821876891}
   - component: {fileID: 821876893}
+  - component: {fileID: 821876894}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3643,6 +3679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeedMultiplier: 2
   rotationSpeedModifier: 45
+  damage: 5
   isCrouching: 0
 --- !u!4 &821876890
 Transform:
@@ -3705,6 +3742,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stepLocation: {x: 0, y: 0, z: 0}
+--- !u!114 &821876894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821876888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c1cd4a4050608449aacf0ded1df385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthPoints: 10
 --- !u!1 &832683294
 GameObject:
   m_ObjectHideFlags: 0
@@ -11444,9 +11494,10 @@ GameObject:
   - component: {fileID: 919132148772033507}
   - component: {fileID: 919132148772033506}
   - component: {fileID: 919132148772033508}
+  - component: {fileID: 919132148772033509}
   m_Layer: 0
   m_Name: Killer
-  m_TagString: Untagged
+  m_TagString: Killer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11528,7 +11579,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c005e761c8fc5214a995cad74c431dff, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.655
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -11612,6 +11663,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &919132148772033509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148772033503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c1cd4a4050608449aacf0ded1df385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthPoints: 25
 --- !u!1 &1082271957905518724
 GameObject:
   m_ObjectHideFlags: 0

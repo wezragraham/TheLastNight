@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
+    public int healthPoints;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,10 @@ public class Health : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TakeDamage(int amount)
+    {
+        healthPoints -= amount;
     }
 }
