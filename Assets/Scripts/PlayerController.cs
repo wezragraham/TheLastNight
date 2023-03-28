@@ -82,6 +82,23 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        //item use
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(killer.GetComponent<Collider>().bounds))
+            {
+                if (equippedObject != null && equippedObject.tag == "Weapon")
+                {
+                    equippedObject.GetComponent<Weapon>().Attack(killer);
+                }
+            }
+            if (equippedObject != null && equippedObject.tag == "Tool")
+            {
+                equippedObject.GetComponent<Tool>().Use();
+            }
+
+        }
+
         //crouching stuff
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -101,18 +118,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        //attacking
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(killer.GetComponent<Collider>().bounds))
-            {
-                if (equippedObject != null && equippedObject.tag == "Weapon")
-                {
-                    equippedObject.GetComponent<Weapon>().Attack(killer);
-                }
-            }
-
-        }
 
         //footsteps for enemy tracking
         if (!isCrouching)
