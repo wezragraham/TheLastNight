@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     GameObject interactibleObject;
 
+    [SerializeField]
     GameObject killer;
 
     GameObject equippedObject;
@@ -32,6 +33,8 @@ public class PlayerController : MonoBehaviour
 
     public bool isCrouching;
 
+    Health myHealth;
+
 
 
     // Start is called before the first frame update
@@ -40,7 +43,7 @@ public class PlayerController : MonoBehaviour
         itemSlot = this.transform.GetChild(2).gameObject;
         myCamera = this.transform.GetChild(1).gameObject;
         myFootsteps = this.gameObject.GetComponent<Footsteps>();
-        killer = GameObject.FindGameObjectWithTag("Killer");
+        myHealth = this.gameObject.GetComponent<Health>();
     }
 
     // Update is called once per frame
@@ -130,7 +133,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-
+        //end game if health is empty
+        if (myHealth.healthPoints <= 0)
+        {
+            GameManager.gmInstance.EndGame(false);
+        }
+        
     }
 
     void PickUpItem()

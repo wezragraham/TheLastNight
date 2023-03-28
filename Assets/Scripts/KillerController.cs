@@ -20,6 +20,8 @@ public class KillerController : MonoBehaviour
     Animator myAnimator;
     AudioSource mySound;
 
+    Health myHealth;
+
     [SerializeField]
     int damage;
 
@@ -29,6 +31,7 @@ public class KillerController : MonoBehaviour
     {
         myAnimator = this.GetComponent<Animator>();
         mySound = this.GetComponent<AudioSource>();
+        myHealth = this.GetComponent<Health>();
     }
 
     // Update is called once per frame
@@ -57,6 +60,11 @@ public class KillerController : MonoBehaviour
             {
                 Attack(player);
             }
+        }
+
+        if (myHealth.healthPoints <= 0)
+        {
+            GameManager.gmInstance.EndGame(true);
         }
 
     }
