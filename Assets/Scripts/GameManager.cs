@@ -1,11 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     float timeElapsed;
     bool gameOver;
+
+    public bool playerSurvived;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -18,12 +26,16 @@ public class GameManager : MonoBehaviour
     {
         timeElapsed += Time.deltaTime;
 
-        if (timeElapsed >= 2400)
+        if (timeElapsed >= 1800)
         {
+            playerSurvived = true;
             gameOver = true;
         }
 
-        Debug.Log(timeElapsed);
+        if (gameOver)
+        {
+            SceneManager.LoadScene(2);
+        }
 
     }
 }
