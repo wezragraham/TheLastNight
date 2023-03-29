@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
     Health myHealth;
 
+    ParticleSystem myParticles;
 
 
     // Start is called before the first frame update
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
         myCamera = this.transform.GetChild(1).gameObject;
         myFootsteps = this.gameObject.GetComponent<Footsteps>();
         myHealth = this.gameObject.GetComponent<Health>();
+        myParticles = this.gameObject.GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -67,7 +69,7 @@ public class PlayerController : MonoBehaviour
         //object interaction stuff - might move to another script
         if (Input.GetKeyDown(KeyCode.Mouse0) && interactibleObject != null)
         {
-            
+
             if (this.gameObject.GetComponent<Collider>().bounds.Intersects(interactibleObject.GetComponent<Collider>().bounds))
             {
                 //door opening, closing
@@ -79,6 +81,14 @@ public class PlayerController : MonoBehaviour
                 if (interactibleObject.tag == "Weapon" || interactibleObject.tag == "Tool")
                 {
                     PickUpItem();
+
+                }
+                if (interactibleObject.tag == "Phone")
+                {
+                    if (interactibleObject.GetComponent<Phone>().answered == false && interactibleObject.GetComponent<Phone>().isRinging == true)
+                    {
+                        interactibleObject.SendMessage("PickUp");
+                    }
 
                 }
             }
@@ -133,12 +143,18 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //blood effect plays when health is low
+        if (myHealth.healthPoints <= myHealth.maxHealth / 2)
+        {
+            myParticles.Play();
+        }
+
         //end game if health is empty
         if (myHealth.healthPoints <= 0)
         {
             GameManager.gmInstance.EndGame(false);
         }
-        
+
     }
 
     void PickUpItem()
@@ -159,7 +175,7 @@ public class PlayerController : MonoBehaviour
     //object stuff
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Door" || other.gameObject.tag == "Weapon" || other.gameObject.tag == "Tool")
+        if (other.gameObject.tag == "Door" || other.gameObject.tag == "Weapon" || other.gameObject.tag == "Tool" || other.gameObject.tag == "Phone")
         {
             interactibleObject = other.gameObject;
         }

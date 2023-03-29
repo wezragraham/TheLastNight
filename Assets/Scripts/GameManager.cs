@@ -66,6 +66,6 @@ public class GameManager : MonoBehaviour
     void PhoneRing()
     {
         phoneRang = true;
-        Debug.Log("ring ring");
+        phone.GetComponent<Phone>().Ring();
     }
 }
