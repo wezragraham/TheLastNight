@@ -9,10 +9,15 @@ public class GameManager : MonoBehaviour
 
     float timeElapsed;
 
-    bool gameOver, phoneRang;
+    bool gameOver, phoneRang, lightsOff;
+
+    public bool playerHasFlashlight;
 
     [SerializeField]
     GameObject killer, phone;
+
+    [SerializeField]
+    GameObject[] lights;
 
     private void Awake()
     {
@@ -43,17 +48,25 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if (timeElapsed >= 1800)
-        {
-            EndGame(true);
-        }
-
         if (timeElapsed >= 60 && phoneRang == false)
         {
             PhoneRing();
         }
 
+        if (timeElapsed >= 90 && playerHasFlashlight == false && phone.GetComponent<Phone>().answered == true && lightsOff == false)
+        {
+            TurnOutLights();
+        }
 
+        if (timeElapsed >= 110 && killer.activeSelf == false)
+        {
+            killer.SetActive(true);
+        }
+
+        if (timeElapsed >= 1800)
+        {
+            EndGame(true);
+        }
 
     }
 
@@ -67,5 +80,14 @@ public class GameManager : MonoBehaviour
     {
         phoneRang = true;
         phone.GetComponent<Phone>().Ring();
+    }
+
+    void TurnOutLights()
+    {
+        foreach (GameObject light in lights)
+        {
+            light.SetActive(false);
+        }
+        lightsOff = true;
     }
 }

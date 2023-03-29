@@ -155,6 +155,10 @@ public class PlayerController : MonoBehaviour
             GameManager.gmInstance.EndGame(false);
         }
 
+        if (equippedObject != null && GameManager.gmInstance.playerHasFlashlight == false && equippedObject.tag == "Tool")
+        {
+            GameManager.gmInstance.playerHasFlashlight = true;
+        }
     }
 
     void PickUpItem()
