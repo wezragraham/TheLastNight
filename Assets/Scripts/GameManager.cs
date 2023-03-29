@@ -13,11 +13,12 @@ public class GameManager : MonoBehaviour
 
     public bool playerHasFlashlight;
 
-    [SerializeField]
     GameObject killer, phone;
 
     [SerializeField]
     GameObject[] lights;
+
+    public bool playerLived;
 
     private void Awake()
     {
@@ -30,6 +31,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        killer = GameObject.FindGameObjectWithTag("Killer");
+        phone = GameObject.FindGameObjectWithTag("Phone");
 
     }
 
@@ -73,6 +77,7 @@ public class GameManager : MonoBehaviour
     public void EndGame(bool playerSurvival)
     {
         gameOver = true;
+        playerLived = playerSurvival;
         SceneManager.LoadScene(2);
     }
 
