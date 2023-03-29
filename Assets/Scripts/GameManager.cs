@@ -52,18 +52,23 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if (timeElapsed >= 60 && phoneRang == false)
+        if (timeElapsed >= 30 && phoneRang == false)
         {
             PhoneRing();
         }
 
-        if (timeElapsed >= 90 && playerHasFlashlight == false && phone.GetComponent<Phone>().answered == true && lightsOff == false)
+        if (timeElapsed >= 50 && playerHasFlashlight == false && phone.GetComponent<Phone>().answered == true && lightsOff == false)
         {
             TurnOutLights();
         }
 
-        if (timeElapsed >= 110 && killer.activeSelf == false)
+        if (timeElapsed >= 60 && killer.activeSelf == false)
         {
+            if (phone.GetComponent<Phone>().answered == true)
+            {
+                killer.transform.position = new Vector3(-14, killer.transform.position.y, -8);
+            }
+
             killer.SetActive(true);
         }
 
