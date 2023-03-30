@@ -25,6 +25,8 @@ public class KillerController : MonoBehaviour
     [SerializeField]
     int damage;
 
+    ParticleSystem myParticles;
+
 
     // Start is called before the first frame update
     void Start()
@@ -32,38 +34,53 @@ public class KillerController : MonoBehaviour
         myAnimator = this.GetComponent<Animator>();
         mySound = this.GetComponent<AudioSource>();
         myHealth = this.GetComponent<Health>();
+        myParticles = this.GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
     void Update()
     {
         playerStepLocation = player.GetComponent<Footsteps>().stepLocation;
-        ChasePlayer();
 
 
-
-        if (myAnimator.GetBool("IsWalking") == true && mySound.isPlaying == false)
+        if (myHealth.healthPoints > 0)
         {
-            mySound.Play();
-        }
-        else if (myAnimator.GetBool("IsWalking") == false && mySound.isPlaying == true)
-        {
-            mySound.Stop();
-        }
+            ChasePlayer();
 
 
-        //while player is in range, attack every second
-        if (this.gameObject.GetComponent<Collider>().bounds.Intersects(player.GetComponent<Collider>().bounds))
-        {
-            attackTimer += Time.deltaTime;
-            if (attackTimer > 1)
+
+            if (myAnimator.GetBool("IsWalking") == true && mySound.isPlaying == false)
             {
-                Attack(player);
+                mySound.Play();
             }
+            else if (myAnimator.GetBool("IsWalking") == false && mySound.isPlaying == true)
+            {
+                mySound.Stop();
+            }
+
+
+            //while player is in range, attack every second
+            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(player.GetComponent<Collider>().bounds))
+            {
+                attackTimer += Time.deltaTime;
+                if (attackTimer > 1)
+                {
+                    Attack(player);
+                }
+            }
+        }
+
+
+
+        //blood effect plays when health is low
+        if (myHealth.healthPoints <= myHealth.maxHealth / 2)
+        {
+            myParticles.Play();
         }
 
         if (myHealth.healthPoints <= 0)
         {
+            myAnimator.SetTrigger("Die");
             GameManager.gmInstance.EndGame(true);
         }
 

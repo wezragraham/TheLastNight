@@ -9,11 +9,11 @@ public class GameManager : MonoBehaviour
 
     float timeElapsed;
 
-    bool gameOver, phoneRang, lightsOff;
+    public bool gameOver, phoneRang, lightsOff;
 
     public bool playerHasFlashlight;
 
-    GameObject killer, phone;
+    public GameObject killer, phone;
 
     [SerializeField]
     GameObject[] lights;
@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
         }
 
         killer = GameObject.FindGameObjectWithTag("Killer");
+        killer.SetActive(false);
         phone = GameObject.FindGameObjectWithTag("Phone");
 
     }
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        killer.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -49,41 +50,38 @@ public class GameManager : MonoBehaviour
         if (!gameOver)
         {
             timeElapsed += Time.deltaTime;
-        }
 
-
-        if (timeElapsed >= 30 && phoneRang == false)
-        {
-            PhoneRing();
-        }
-
-        if (timeElapsed >= 50 && playerHasFlashlight == false && phone.GetComponent<Phone>().answered == true && lightsOff == false)
-        {
-            TurnOutLights();
-        }
-
-        if (timeElapsed >= 60 && killer.activeSelf == false)
-        {
-            if (phone.GetComponent<Phone>().answered == true)
+            if (timeElapsed >= 30 && phoneRang == false)
             {
-                killer.transform.position = new Vector3(-14, killer.transform.position.y, -8);
+                PhoneRing();
             }
 
-            killer.SetActive(true);
-        }
+            if (timeElapsed >= 50 && playerHasFlashlight == false && phone.GetComponent<Phone>().answered == true && lightsOff == false)
+            {
+                TurnOutLights();
+            }
 
-        if (timeElapsed >= 1800)
-        {
-            EndGame(true);
-        }
+            if (timeElapsed >= 60 && killer.activeSelf == false)
+            {
+                if (phone.GetComponent<Phone>().answered == false)
+                {
+                    killer.transform.position = new Vector3(-14, killer.transform.position.y, -8);
+                }
 
+                killer.SetActive(true);
+            }
+
+            if (timeElapsed >= 1800)
+            {
+                EndGame(true);
+            }
+        }
     }
 
     public void EndGame(bool playerSurvival)
     {
-        gameOver = true;
-        playerLived = playerSurvival;
-        SceneManager.LoadScene(2);
+        StartCoroutine(WaitThenEnd(playerSurvival));
+
     }
 
     void PhoneRing()
@@ -99,5 +97,14 @@ public class GameManager : MonoBehaviour
             light.SetActive(false);
         }
         lightsOff = true;
+    }
+
+    IEnumerator WaitThenEnd(bool playerSurvival)
+    {
+        yield return new WaitForSeconds(5);
+        gameOver = true;
+        timeElapsed = 0;
+        playerLived = playerSurvival;
+        SceneManager.LoadScene(2);
     }
 }
