@@ -31,5 +31,6 @@ public class GameOver : MonoBehaviour
     {
         SceneManager.LoadScene(1);
         GameManager.gmInstance.gameOver = false;
+        GameManager.gmInstance.timeElapsed = 0;
     }
 }

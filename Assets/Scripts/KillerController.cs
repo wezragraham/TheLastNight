@@ -25,8 +25,9 @@ public class KillerController : MonoBehaviour
     [SerializeField]
     int damage;
 
-    ParticleSystem myParticles;
+    bool dead;
 
+    ParticleSystem myParticles;
 
     // Start is called before the first frame update
     void Start()
@@ -68,21 +69,26 @@ public class KillerController : MonoBehaviour
                     Attack(player);
                 }
             }
+
+
+            //blood effect plays when health is low
+            if (myHealth.healthPoints <= myHealth.maxHealth / 2)
+            {
+                myParticles.Play();
+            }
         }
-
-
-
-        //blood effect plays when health is low
-        if (myHealth.healthPoints <= myHealth.maxHealth / 2)
+        else
         {
-            myParticles.Play();
+            if (myHealth.healthPoints <= 0 && dead == false)
+            {
+                Die();
+            }
         }
 
-        if (myHealth.healthPoints <= 0)
-        {
-            myAnimator.SetTrigger("Die");
-            GameManager.gmInstance.EndGame(true);
-        }
+
+
+
+
 
     }
 
@@ -111,6 +117,14 @@ public class KillerController : MonoBehaviour
         }
     }
 
+    void Die()
+    {
+        dead = true;
+        myParticles.Stop();
+        myAnimator.SetTrigger("Die");
+        GameManager.gmInstance.EndGame(true);
+
+    }
     void Attack(GameObject target)
     {
         myAnimator.SetTrigger("Attack");

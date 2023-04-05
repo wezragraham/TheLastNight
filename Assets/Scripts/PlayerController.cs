@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
 
     ParticleSystem myParticles;
 
+    bool dead;
+
 
     // Start is called before the first frame update
     void Start()
@@ -61,10 +63,7 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up * mouseX * rotationSpeedModifier * Time.deltaTime);
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+
 
         //object interaction stuff - might move to another script
         if (Input.GetKeyDown(KeyCode.Mouse0) && interactibleObject != null)
@@ -150,14 +149,20 @@ public class PlayerController : MonoBehaviour
         }
 
         //end game if health is empty
-        if (myHealth.healthPoints <= 0)
+        if (myHealth.healthPoints <= 0 && dead == false)
         {
+            dead = true;
             GameManager.gmInstance.EndGame(false);
         }
 
         if (equippedObject != null && GameManager.gmInstance.playerHasFlashlight == false && equippedObject.tag == "Tool")
         {
             GameManager.gmInstance.playerHasFlashlight = true;
+        }
+
+        if (equippedObject != null && GameManager.gmInstance.playerHasKnife == false && equippedObject.tag == "Weapon")
+        {
+            GameManager.gmInstance.playerHasKnife = true;
         }
     }
 

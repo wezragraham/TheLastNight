@@ -7,21 +7,26 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gmInstance = null;
 
-    float timeElapsed;
+    public float timeElapsed;
+
+    float damageTimer;
 
     public bool gameOver, phoneRang, lightsOff;
 
-    public bool playerHasFlashlight;
+    public bool playerHasFlashlight, playerHasKnife;
 
-    public GameObject killer, phone;
+    public GameObject killer, phone, player;
 
     [SerializeField]
     GameObject[] lights;
+
+    ParticleSystem fire;
 
     public bool playerLived;
 
     private void Awake()
     {
+
         if (gmInstance == null)
         {
             gmInstance = this;
@@ -34,7 +39,11 @@ public class GameManager : MonoBehaviour
 
         killer = GameObject.FindGameObjectWithTag("Killer");
         killer.SetActive(false);
+
+        player = GameObject.FindGameObjectWithTag("Player");
+
         phone = GameObject.FindGameObjectWithTag("Phone");
+        fire = GameObject.Find("Rooms").GetComponent<ParticleSystem>();
 
     }
 
@@ -47,16 +56,22 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         if (!gameOver)
         {
             timeElapsed += Time.deltaTime;
 
-            if (timeElapsed >= 30 && phoneRang == false)
+            if (timeElapsed >= 20 && phoneRang == false)
             {
                 PhoneRing();
             }
 
-            if (timeElapsed >= 50 && playerHasFlashlight == false && phone.GetComponent<Phone>().answered == true && lightsOff == false)
+            if (timeElapsed >= 40 && playerHasFlashlight == false && phone.GetComponent<Phone>().answered == true && lightsOff == false)
             {
                 TurnOutLights();
             }
@@ -68,7 +83,28 @@ public class GameManager : MonoBehaviour
                     killer.transform.position = new Vector3(-14, killer.transform.position.y, -8);
                 }
 
+                if(playerHasKnife == true)
+                {
+                    killer.transform.position = new Vector3(-10, killer.transform.position.y, 0);
+                    fire.Play();
+
+                }
+
+
+
                 killer.SetActive(true);
+            }
+
+
+            if (fire.isPlaying)
+            {
+                damageTimer += Time.deltaTime;
+                if (damageTimer > 3)
+                {
+                    player.GetComponent<Health>().TakeDamage(8);
+                    damageTimer = 0;
+                }
+
             }
 
             if (timeElapsed >= 1800)
@@ -76,11 +112,20 @@ public class GameManager : MonoBehaviour
                 EndGame(true);
             }
         }
+
+
+
+
+
     }
 
     public void EndGame(bool playerSurvival)
     {
-        StartCoroutine(WaitThenEnd(playerSurvival));
+        if (SceneManager.GetActiveScene().buildIndex != 2)
+        {
+            StartCoroutine(WaitThenEnd(playerSurvival));
+        }
+
 
     }
 
