@@ -30,7 +30,6 @@ public class GameOver : MonoBehaviour
     public void PlayAgain()
     {
         SceneManager.LoadScene(1);
-        GameManager.gmInstance.gameOver = false;
-        GameManager.gmInstance.timeElapsed = 0;
+        Destroy(GameManager.gmInstance);
     }
 }
