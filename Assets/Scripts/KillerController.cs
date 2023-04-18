@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class KillerController : MonoBehaviour
 {
     [SerializeField]
     GameObject player;
 
-    Vector3 playerStepLocation;
+    Vector3 playerStepLocation, origin;
 
     [SerializeField]
     float movementSpeedMultiplier;
@@ -25,13 +26,21 @@ public class KillerController : MonoBehaviour
     [SerializeField]
     int damage;
 
+    int nearDeathExperiences;
+
+    bool walkingAway;
+
     bool dead;
 
     ParticleSystem myParticles;
 
+    NavMeshAgent myAgent;
+
     // Start is called before the first frame update
     void Start()
     {
+        myAgent = this.GetComponent<NavMeshAgent>();
+        origin = this.transform.position;
         myAnimator = this.GetComponent<Animator>();
         mySound = this.GetComponent<AudioSource>();
         myHealth = this.GetComponent<Health>();
@@ -41,8 +50,13 @@ public class KillerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         playerStepLocation = player.GetComponent<Footsteps>().stepLocation;
 
+        if (myHealth.healthPoints == myHealth.maxHealth && myParticles.isPlaying)
+        {
+            myParticles.Stop();
+        }
 
         if (myHealth.healthPoints > 0)
         {
@@ -75,7 +89,19 @@ public class KillerController : MonoBehaviour
             if (myHealth.healthPoints <= myHealth.maxHealth / 2)
             {
                 myParticles.Play();
+                if (nearDeathExperiences < 2)
+                {
+                    NearDeathExperience();
+                }
+
             }
+
+            if (walkingAway)
+            {
+                WalkAway();
+            }
+
+
         }
         else
         {
@@ -87,27 +113,33 @@ public class KillerController : MonoBehaviour
 
 
 
-
-
-
     }
 
     //locate and follow player
     void ChasePlayer()
     {
+
         if ((Vector3.Distance(player.transform.position, this.transform.position) < 3))
         {
             myAnimator.SetBool("IsWalking", true);
+            /*
             transform.LookAt(new Vector3(player.transform.position.x, this.transform.position.y, player.transform.position.z));
             transform.Translate(Vector3.forward * (movementSpeedMultiplier / 2) * Time.deltaTime);
+            */
+
+            myAgent.destination = new Vector3(player.transform.position.x, this.transform.position.y, player.transform.position.z);
         }
         else if ((Vector3.Distance(player.transform.position, this.transform.position) > 3))
         {
             if (Vector3.Distance(new Vector3(playerStepLocation.x, this.transform.position.y, player.transform.position.z), this.transform.position) > 2)
             {
                 myAnimator.SetBool("IsWalking", true);
+                /*
                 transform.LookAt(new Vector3(playerStepLocation.x, this.transform.position.y, player.transform.position.z));
                 transform.Translate(Vector3.forward * movementSpeedMultiplier * Time.deltaTime);
+                */
+
+                myAgent.destination = new Vector3(playerStepLocation.x, this.transform.position.y, player.transform.position.z);
             }
             else
             {
@@ -115,6 +147,27 @@ public class KillerController : MonoBehaviour
             }
 
         }
+    }
+
+    void WalkAway()
+    {
+
+
+        myAnimator.SetBool("IsWalking", true);
+
+        /*
+        transform.LookAt(origin);
+        transform.Translate(Vector3.forward * (movementSpeedMultiplier / 2) * Time.deltaTime);
+        */
+        myAgent.destination = origin;
+
+        if ((Vector3.Distance(player.transform.position, this.transform.position) > 6))
+        {
+            walkingAway = false;
+            movementSpeedMultiplier += 2;
+            damage += 3;
+        }
+
     }
 
     void Die()
@@ -130,6 +183,21 @@ public class KillerController : MonoBehaviour
         myAnimator.SetTrigger("Attack");
         target.GetComponent<Health>().TakeDamage(damage);
         attackTimer = 0;
-        
+
+    }
+
+    void NearDeathExperience()
+    {
+        nearDeathExperiences++;
+        myHealth.RestoreHealth();
+        walkingAway = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Door")
+        {
+            Destroy(collision.gameObject);
+        }
     }
 }
