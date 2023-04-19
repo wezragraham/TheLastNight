@@ -163,9 +163,10 @@ public class KillerController : MonoBehaviour
 
         if ((Vector3.Distance(origin, this.transform.position) < 2))
         {
+            GameManager.gmInstance.KillerNearDeathExperience(nearDeathExperiences);
             walkingAway = false;
-            movementSpeedMultiplier += 2;
-            damage += 3;
+            myAgent.speed += 1;
+            damage += 1;
         }
 
     }
@@ -188,9 +189,8 @@ public class KillerController : MonoBehaviour
 
     void NearDeathExperience()
     {
-        GameManager.gmInstance.KillerNearDeathExperience(nearDeathExperiences);
-        nearDeathExperiences++;
         myHealth.RestoreHealth();
+        nearDeathExperiences++;
         walkingAway = true;
     }
 

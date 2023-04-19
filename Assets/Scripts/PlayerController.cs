@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour
 
     bool dead;
 
+    float healthRestoreTimer;
+
 
     // Start is called before the first frame update
     void Start()
@@ -57,113 +59,132 @@ public class PlayerController : MonoBehaviour
         hInput = Input.GetAxis("Horizontal");
         mouseX = Input.GetAxis("Mouse X");
 
-
-        transform.Translate(Vector3.forward * vInput * movementSpeedMultiplier * Time.deltaTime);
-        transform.Translate(Vector3.right * hInput * movementSpeedMultiplier * Time.deltaTime);
-
-        transform.Rotate(Vector3.up * mouseX * rotationSpeedModifier * Time.deltaTime);
-
-
-
-        //object interaction stuff - might move to another script
-        if (Input.GetKeyDown(KeyCode.Mouse0) && interactibleObject != null)
+        if (dead == false)
         {
+            transform.Translate(Vector3.forward * vInput * movementSpeedMultiplier * Time.deltaTime);
+            transform.Translate(Vector3.right * hInput * movementSpeedMultiplier * Time.deltaTime);
 
-            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(interactibleObject.GetComponent<Collider>().bounds))
+            transform.Rotate(Vector3.up * mouseX * rotationSpeedModifier * Time.deltaTime);
+
+
+
+            //object interaction stuff - might move to another script
+            if (Input.GetKeyDown(KeyCode.Mouse0) && interactibleObject != null)
             {
-                //door opening, closing
-                if (interactibleObject.tag == "Door")
-                {
-                    interactibleObject.SendMessage("OpenOrClose");
-                }
-                //picking up items
-                if (interactibleObject.tag == "Weapon" || interactibleObject.tag == "Tool")
-                {
-                    PickUpItem();
 
-                }
-                if (interactibleObject.tag == "Phone")
+                if (this.gameObject.GetComponent<Collider>().bounds.Intersects(interactibleObject.GetComponent<Collider>().bounds))
                 {
-                    if (interactibleObject.GetComponent<Phone>().answered == false && interactibleObject.GetComponent<Phone>().isRinging == true)
+                    //door opening, closing
+                    if (interactibleObject.tag == "Door")
                     {
-                        interactibleObject.SendMessage("PickUp");
+                        interactibleObject.SendMessage("OpenOrClose");
                     }
+                    //picking up items
+                    if (interactibleObject.tag == "Weapon" || interactibleObject.tag == "Tool")
+                    {
+                        PickUpItem();
 
+                    }
+                    if (interactibleObject.tag == "Phone")
+                    {
+                        if (interactibleObject.GetComponent<Phone>().answered == false && interactibleObject.GetComponent<Phone>().isRinging == true)
+                        {
+                            interactibleObject.SendMessage("PickUp");
+                        }
+
+                    }
                 }
+
             }
 
-        }
-
-        //item use
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            if (this.gameObject.GetComponent<Collider>().bounds.Intersects(killer.GetComponent<Collider>().bounds))
+            //item use
+            if (Input.GetKeyDown(KeyCode.LeftControl))
             {
-                if (equippedObject != null && equippedObject.tag == "Weapon")
+                if (this.gameObject.GetComponent<Collider>().bounds.Intersects(killer.GetComponent<Collider>().bounds))
                 {
-                    equippedObject.GetComponent<Weapon>().Attack(killer);
+                    if (equippedObject != null && equippedObject.tag == "Weapon")
+                    {
+                        equippedObject.GetComponent<Weapon>().Attack(killer);
+                    }
+                }
+                if (equippedObject != null && equippedObject.tag == "Tool")
+                {
+                    equippedObject.GetComponent<Tool>().Use();
+                }
+
+            }
+
+            //crouching stuff
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                if (!isCrouching)
+                {
+                    isCrouching = true;
+                    myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y - 0.3f, myCamera.transform.position.z);
+                    itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y - 0.3f, itemSlot.transform.position.z);
+                    movementSpeedMultiplier = movementSpeedMultiplier / 2;
+                }
+                else if (isCrouching)
+                {
+                    isCrouching = false;
+                    myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y + 0.3f, myCamera.transform.position.z);
+                    itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y + 0.3f, itemSlot.transform.position.z);
+                    movementSpeedMultiplier = movementSpeedMultiplier * 2;
                 }
             }
-            if (equippedObject != null && equippedObject.tag == "Tool")
-            {
-                equippedObject.GetComponent<Tool>().Use();
-            }
 
-        }
 
-        //crouching stuff
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
+            //footsteps for enemy tracking
             if (!isCrouching)
             {
-                isCrouching = true;
-                myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y - 0.3f, myCamera.transform.position.z);
-                itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y - 0.3f, itemSlot.transform.position.z);
-                movementSpeedMultiplier = movementSpeedMultiplier / 2;
+                stepTimer += Time.deltaTime;
+                if (stepTimer >= 5)
+                {
+                    myFootsteps.TakeStep();
+                    stepTimer = 0;
+                }
             }
-            else if (isCrouching)
+
+            //blood effect plays when health is low
+            if (myHealth.healthPoints <= myHealth.maxHealth / 2)
             {
-                isCrouching = false;
-                myCamera.transform.position = new Vector3(myCamera.transform.position.x, myCamera.transform.position.y + 0.3f, myCamera.transform.position.z);
-                itemSlot.transform.position = new Vector3(itemSlot.transform.position.x, itemSlot.transform.position.y + 0.3f, itemSlot.transform.position.z);
-                movementSpeedMultiplier = movementSpeedMultiplier * 2;
+                myParticles.Play();
+
+                if (Vector3.Distance(this.transform.position, killer.transform.position) > 5)
+                {
+                    healthRestoreTimer += Time.deltaTime;
+                }
             }
-        }
 
-
-        //footsteps for enemy tracking
-        if (!isCrouching)
-        {
-            stepTimer += Time.deltaTime;
-            if (stepTimer >= 5)
+            if (healthRestoreTimer > 2)
             {
-                myFootsteps.TakeStep();
-                stepTimer = 0;
+                myHealth.RestoreHealth(2);
+                healthRestoreTimer = 0;
+            }
+
+            if (myHealth.healthPoints > myHealth.maxHealth / 2 && myParticles.isPlaying)
+            {
+                myParticles.Stop();
+            }
+
+                //end game if health is empty
+                if (myHealth.healthPoints <= 0)
+            {
+                dead = true;
+                GameManager.gmInstance.EndGame(false);
+            }
+
+            if (equippedObject != null && GameManager.gmInstance.playerHasFlashlight == false && equippedObject.tag == "Tool")
+            {
+                GameManager.gmInstance.playerHasFlashlight = true;
+            }
+
+            if (equippedObject != null && GameManager.gmInstance.playerHasKnife == false && equippedObject.tag == "Weapon")
+            {
+                GameManager.gmInstance.playerHasKnife = true;
             }
         }
 
-        //blood effect plays when health is low
-        if (myHealth.healthPoints <= myHealth.maxHealth / 2)
-        {
-            myParticles.Play();
-        }
-
-        //end game if health is empty
-        if (myHealth.healthPoints <= 0 && dead == false)
-        {
-            dead = true;
-            GameManager.gmInstance.EndGame(false);
-        }
-
-        if (equippedObject != null && GameManager.gmInstance.playerHasFlashlight == false && equippedObject.tag == "Tool")
-        {
-            GameManager.gmInstance.playerHasFlashlight = true;
-        }
-
-        if (equippedObject != null && GameManager.gmInstance.playerHasKnife == false && equippedObject.tag == "Weapon")
-        {
-            GameManager.gmInstance.playerHasKnife = true;
-        }
     }
 
     void PickUpItem()

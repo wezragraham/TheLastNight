@@ -16,7 +16,10 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (this.gameObject.tag == "Player")
+        {
+            Debug.Log(healthPoints);
+        }
     }
 
     public void TakeDamage(int amount)
@@ -27,5 +30,10 @@ public class Health : MonoBehaviour
     public void RestoreHealth()
     {
         healthPoints = maxHealth;
+    }
+
+    public void RestoreHealth(int amount)
+    {
+        healthPoints += amount;
     }
 }

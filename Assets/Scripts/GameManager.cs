@@ -18,7 +18,10 @@ public class GameManager : MonoBehaviour
     public GameObject killer, phone, player;
 
     [SerializeField]
-    GameObject[] lights;
+    GameObject[] lights, meats;
+
+    [SerializeField]
+    GameObject branches;
 
     ParticleSystem fire;
 
@@ -37,6 +40,13 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+        foreach(GameObject meat in meats)
+        {
+            meat.SetActive(false);
+        }
+
+        branches.SetActive(false);
+
         killer = GameObject.FindGameObjectWithTag("Killer");
         killer.SetActive(false);
 
@@ -44,6 +54,8 @@ public class GameManager : MonoBehaviour
 
         phone = GameObject.FindGameObjectWithTag("Phone");
         fire = GameObject.Find("Rooms").GetComponent<ParticleSystem>();
+
+        
 
     }
 
@@ -110,14 +122,15 @@ public class GameManager : MonoBehaviour
             if (lightsFlickering == true)
             {
                 flickerTimer += Time.deltaTime;
-                if (flickerTimer > 0.3f)
+            }
+
+            if (flickerTimer > Random.Range(0.1f, 0.4f))
+            {
+                foreach (GameObject light in lights)
                 {
-                    foreach(GameObject light in lights)
-                    {
-                        light.SetActive(!light.activeSelf);
-                    }
-                    flickerTimer = 0;
+                    light.SetActive(!light.activeSelf);
                 }
+                flickerTimer = 0;
             }
 
             if (timeElapsed >= 1800)
@@ -162,10 +175,15 @@ public class GameManager : MonoBehaviour
         if (number == 1)
         {
             lightsFlickering = true;
+            foreach(GameObject meat in meats)
+            {
+                meat.SetActive(true);
+            }
         }
         else if (number == 2)
         {
-            ;
+            branches.SetActive(true);
+            fire.Play();
         }
     }
 
