@@ -161,7 +161,7 @@ public class KillerController : MonoBehaviour
         */
         myAgent.destination = origin;
 
-        if ((Vector3.Distance(player.transform.position, this.transform.position) > 6))
+        if ((Vector3.Distance(origin, this.transform.position) < 2))
         {
             walkingAway = false;
             movementSpeedMultiplier += 2;
@@ -188,16 +188,23 @@ public class KillerController : MonoBehaviour
 
     void NearDeathExperience()
     {
+        GameManager.gmInstance.KillerNearDeathExperience(nearDeathExperiences);
         nearDeathExperiences++;
         myHealth.RestoreHealth();
         walkingAway = true;
+    }
+
+    IEnumerator BreakDown(GameObject objectToBeBroken)
+    {
+        yield return new WaitForSeconds(2);
+        Destroy(objectToBeBroken);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Door")
         {
-            Destroy(collision.gameObject);
+            StartCoroutine(BreakDown(collision.gameObject));
         }
     }
 }

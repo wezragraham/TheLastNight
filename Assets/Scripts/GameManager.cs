@@ -7,11 +7,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gmInstance = null;
 
-    public float timeElapsed;
+    public float timeElapsed, flickerTimer;
 
     float damageTimer;
 
-    public bool gameOver, phoneRang, lightsOff;
+    public bool gameOver, phoneRang, lightsOff, lightsFlickering;
 
     public bool playerHasFlashlight, playerHasKnife;
 
@@ -107,6 +107,19 @@ public class GameManager : MonoBehaviour
 
             }
 
+            if (lightsFlickering == true)
+            {
+                flickerTimer += Time.deltaTime;
+                if (flickerTimer > 0.3f)
+                {
+                    foreach(GameObject light in lights)
+                    {
+                        light.SetActive(!light.activeSelf);
+                    }
+                    flickerTimer = 0;
+                }
+            }
+
             if (timeElapsed >= 1800)
             {
                 EndGame(true);
@@ -142,6 +155,18 @@ public class GameManager : MonoBehaviour
             light.SetActive(false);
         }
         lightsOff = true;
+    }
+
+    public void KillerNearDeathExperience(int number)
+    {
+        if (number == 1)
+        {
+            lightsFlickering = true;
+        }
+        else if (number == 2)
+        {
+            ;
+        }
     }
 
     IEnumerator WaitThenEnd(bool playerSurvival)
