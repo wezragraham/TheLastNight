@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
             {
                 myParticles.Play();
 
-                if (Vector3.Distance(this.transform.position, killer.transform.position) > 5)
+                if (Vector3.Distance(this.transform.position, killer.transform.position) > 5 && isCrouching == true)
                 {
                     healthRestoreTimer += Time.deltaTime;
                 }
@@ -167,11 +167,10 @@ public class PlayerController : MonoBehaviour
                 myParticles.Stop();
             }
 
-                //end game if health is empty
-                if (myHealth.healthPoints <= 0)
+            //end game if health is empty
+            if (myHealth.healthPoints <= 0 && dead == false)
             {
-                dead = true;
-                GameManager.gmInstance.EndGame(false);
+                Die();
             }
 
             if (equippedObject != null && GameManager.gmInstance.playerHasFlashlight == false && equippedObject.tag == "Tool")
@@ -214,5 +213,17 @@ public class PlayerController : MonoBehaviour
     void Attack(GameObject target)
     {
         target.GetComponent<Health>().TakeDamage(damage);
+    }
+
+    void Die()
+    {
+        if (equippedObject != null)
+        {
+            Destroy(equippedObject);
+        }
+        dead = true;
+        transform.Rotate(new Vector3(-90, 0, 0));
+        transform.Translate(new Vector3(0, -2, 0), Space.Self);
+        GameManager.gmInstance.EndGame(false);
     }
 }

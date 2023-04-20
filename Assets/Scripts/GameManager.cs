@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
                 damageTimer += Time.deltaTime;
                 if (damageTimer > 3)
                 {
-                    player.GetComponent<Health>().TakeDamage(8);
+                    player.GetComponent<Health>().TakeDamage(2);
                     damageTimer = 0;
                 }
 
@@ -183,7 +183,7 @@ public class GameManager : MonoBehaviour
         else if (number == 2)
         {
             branches.SetActive(true);
-            fire.Play();
+
         }
     }
 

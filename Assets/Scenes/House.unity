@@ -16529,7 +16529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec545338371da14cb5ac0fed05fa03c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeedModifier: 15
+  rotationSpeedModifier: 100
 --- !u!1001 &521124672
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24446,7 +24446,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh66934
+  m_Name: pb_Mesh79504
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -27938,7 +27938,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh66678
+  m_Name: pb_Mesh77792
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -28864,7 +28864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeedMultiplier: 2
-  rotationSpeedModifier: 45
+  rotationSpeedModifier: 200
   damage: 5
   killer: {fileID: 919132148772033503}
   isCrouching: 0
@@ -29098,7 +29098,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.25
+      scalar: 0.45
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -29647,11 +29647,11 @@ ParticleSystem:
     angle: 5.289521
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0.84456843
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0, y: 0.45737052, z: -0.000000029802322}
     m_Rotation: {x: 90, y: 0, z: 0}
-    m_Scale: {x: 0.52890885, y: 0.29832956, z: 0.52071345}
+    m_Scale: {x: 0.52890885, y: 0.13784648, z: 2.1449957}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -29730,7 +29730,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 1.3820142
+      value: 1.9558129
       mode: 0
       spread: 0
       speed:
@@ -29788,7 +29788,7 @@ ParticleSystem:
           m_RotationOrder: 4
     arc:
       value: 180
-      mode: 0
+      mode: 3
       spread: 0
       speed:
         serializedVersion: 2
@@ -47520,7 +47520,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh46170
+  m_Name: pb_Mesh73684
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -54966,7 +54966,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh66770
+  m_Name: pb_Mesh78228
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -63764,7 +63764,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh66452
+  m_Name: pb_Mesh75818
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -71076,7 +71076,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh66536
+  m_Name: pb_Mesh76546
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -74018,7 +74018,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh46502
+  m_Name: pb_Mesh76036
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
