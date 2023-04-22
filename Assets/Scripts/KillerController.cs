@@ -21,6 +21,9 @@ public class KillerController : MonoBehaviour
     Animator myAnimator;
     AudioSource mySound;
 
+    [SerializeField]
+    AudioClip bang, footsteps;
+
     Health myHealth;
 
     [SerializeField]
@@ -45,6 +48,7 @@ public class KillerController : MonoBehaviour
         mySound = this.GetComponent<AudioSource>();
         myHealth = this.GetComponent<Health>();
         myParticles = this.GetComponent<ParticleSystem>();
+        footsteps = this.GetComponent<AudioSource>().clip;
     }
 
     // Update is called once per frame
@@ -196,15 +200,23 @@ public class KillerController : MonoBehaviour
 
     IEnumerator BreakDown(GameObject objectToBeBroken)
     {
+        mySound.clip = bang;
+        mySound.Play();
         yield return new WaitForSeconds(2);
+
         Destroy(objectToBeBroken);
+        mySound.clip = footsteps;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Door")
         {
-            StartCoroutine(BreakDown(collision.gameObject));
+            if (collision.gameObject.GetComponent<Door>().open == false)
+            {
+                StartCoroutine(BreakDown(collision.gameObject));
+            }
+
         }
     }
 }

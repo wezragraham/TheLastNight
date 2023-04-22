@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
 
     ParticleSystem fire;
 
+    AudioSource myAudio;
+
     public bool playerLived;
 
     private void Awake()
@@ -55,7 +57,7 @@ public class GameManager : MonoBehaviour
         phone = GameObject.FindGameObjectWithTag("Phone");
         fire = GameObject.Find("Rooms").GetComponent<ParticleSystem>();
 
-        
+        myAudio = this.GetComponent<AudioSource>();
 
     }
 
@@ -99,6 +101,7 @@ public class GameManager : MonoBehaviour
                 {
                     killer.transform.position = new Vector3(-10, killer.transform.position.y, 0);
                     fire.Play();
+                    myAudio.Play();
 
                 }
 
@@ -189,7 +192,9 @@ public class GameManager : MonoBehaviour
 
     IEnumerator WaitThenEnd(bool playerSurvival)
     {
+
         yield return new WaitForSeconds(5);
+        myAudio.Stop();
         gameOver = true;
         timeElapsed = 0;
         playerLived = playerSurvival;

@@ -6,7 +6,7 @@ public class Door : MonoBehaviour
 {
     [SerializeField]
     private GameObject myHinge;
-    bool open;
+    public bool open;
 
     // Start is called before the first frame update
     void Start()
